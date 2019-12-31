@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,17 +26,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
-
+    'djmoney',
     'user_management',
     'product_management',
     'commons',
     'cart_management',
     'bank_management',
-    # 'authentication'
+    'authentication',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,7 +78,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lx_shop.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -96,9 +93,9 @@ DATABASES = {
             'init_command': 'ALTER DATABASE db_lx_shop CHARACTER SET utf8 COLLATE utf8_general_ci',
         },
 
-
     }
 }
+CURRENCIES = ('USD', 'EUR')
 
 AUTH_USER_MODEL = 'user_management.User'
 
@@ -145,7 +142,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

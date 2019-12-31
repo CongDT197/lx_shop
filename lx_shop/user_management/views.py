@@ -2,6 +2,7 @@ from django.db import transaction
 from django.shortcuts import render
 
 # Create your views here.
+from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
@@ -15,6 +16,7 @@ from user_management.serializer import ListUserSerializer, DetailUserSerializer,
     EditUserSerializer, DeleteUserSerializer
 
 
+@method_decorator(name='partial_update', decorator=swagger_auto_schema(auto_schema=None))
 class UserAPIView(GenericViewSet,
                   ListModelMixin,
                   CreateModelMixin,
@@ -58,12 +60,11 @@ class UserAPIView(GenericViewSet,
         queryset = User.objects.filter(id=id).filter(is_active=True)
         if queryset.count() == 0:
             raise ValidationError('USER_IS_DELETED_BY_ANOTHER_ADMIN')
-        partial = kwargs.pop('partial', False)
         instance = self.get_object()
         if not instance.is_active == True:
             raise ValidationError('USER_IS_DELETED_BY_ANOTHER_ADMIN')
 
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response({

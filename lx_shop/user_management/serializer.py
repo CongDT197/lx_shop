@@ -11,9 +11,12 @@ from rest_framework.schemas.coreapi import is_custom_action
 from rest_framework.serializers import ModelSerializer, Serializer
 from commons.error_code import ValidationError
 from user_management.models import User
+from user_management.validation import validate_unique_email
 
 
 class ListUserSerializer(ModelSerializer):
+    gender=serializers.CharField(source='get_gender_display')
+    user_type=serializers.CharField(source='get_user_type_display')
 
     class Meta:
         model = User
@@ -33,11 +36,12 @@ class ListUserSerializer(ModelSerializer):
 
 class CreateUserSerializer(ModelSerializer):
     email = serializers.EmailField()
+
     def validate_email(self, value):
         user_list = User.objects.filter(email=value)
         for user in user_list:
             if user.is_active == True:
-                raise ValidationError('EMAIL_UNIQUE', 'unique')
+                raise ValidationError('EMAIL_UNIQUE')
             elif user.is_active == False:
                 user.delete()
         return value
@@ -49,9 +53,10 @@ class CreateUserSerializer(ModelSerializer):
 
 
     def validate_birthday(self, value):
-        if datetime.now().year - value.year < 15:
-            raise ValidationError('NOT_ENOUGH_WORKING_AGE')
+        if datetime.now().year - value.year < 18:
+            raise ValidationError('NOT_ENOUGH_AGE')
         return value
+
 
     class Meta:
         model = User
@@ -73,15 +78,13 @@ class CreateUserSerializer(ModelSerializer):
 
     @transaction.atomic()
     def create(self, validated_data):
-        password = make_password(validated_data['identity_card'])
+        password = make_password(validated_data['phone_number'])
         user = User.objects.create(password=password, **validated_data)
-        # User_department.objects.create(user_id=user, **user_department_data[0])
         return user
 
 
 class EditUserSerializer(ModelSerializer):
     email = serializers.EmailField()
-    identity_card = serializers.CharField()
 
     def validate_phone_number(self, value):
         if not value.isdigit():
@@ -89,8 +92,8 @@ class EditUserSerializer(ModelSerializer):
         return value
 
     def validate_birthday(self, value):
-        if datetime.now().year - value.year < 15:
-            raise ValidationError('NOT_ENOUGH_WORKING_AGE')
+        if datetime.now().year - value.year < 18:
+            raise ValidationError('NOT_ENOUGH_AGE')
         return value
 
     class Meta:
@@ -112,7 +115,7 @@ class EditUserSerializer(ModelSerializer):
 
     @transaction.atomic()
     def update(self, instance, validated_data):
-        # validate_unique_email(instance, validated_data['email'])
+        validate_unique_email(instance, validated_data['email'])
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
