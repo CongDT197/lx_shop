@@ -27,7 +27,7 @@ class ListCartProductSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CreateCartProductSerializer(ModelSerializer):
+class CreateEditCartProductSerializer(ModelSerializer):
     product_info_id = serializers.StringRelatedField
 
     def validate_quantity(self, value):

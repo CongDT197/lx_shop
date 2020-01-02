@@ -56,11 +56,11 @@ class CartAPIView(GenericViewSet,
         id = self.kwargs[self.lookup_field]
         queryset = Cart.objects.filter(id=id).filter(is_active=True)
         if queryset.count() == 0:
-            raise ValidationError('Cart_IS_DELETED_BY_ANOTHER_ADMIN')
+            raise ValidationError('CART_IS_DELETED_BY_ANOTHER_ADMIN')
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         if not instance.is_active == True:
-            raise ValidationError('Cart_IS_DELETED_BY_ANOTHER_ADMIN')
+            raise ValidationError('CART_IS_DELETED_BY_ANOTHER_ADMIN')
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)

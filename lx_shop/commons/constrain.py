@@ -39,3 +39,14 @@ NONE_COLOR = 5
 # pay_type
 PAYBYCARD = 1
 PAYOFFLINE = 2
+
+#
+# def validate_product_info(self, value):
+#     for new_cart_product in value:
+#         product_info = new_cart_product['product_info_id']
+#         quantity = new_cart_product['quantity']
+#         if (product_info.quantity - quantity) < 0:
+#             raise ValidationError('ENOUGH_PRODUCT_QUANTITY')
+#
+#     return value
+#

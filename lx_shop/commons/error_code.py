@@ -212,6 +212,11 @@ ErrorCode = {
         'message': 'Price must great than 0 value',
         'code': 363
     },
+    'PRICE_INVALID': {
+        'message': 'Price must be number',
+        'code': 364
+    },
+
     'ADDRESS_RECEIVE_MIN_LENGTH': {
         'message': 'Address receive must great than 10 character',
         'code': 365
@@ -230,13 +235,13 @@ ErrorCode = {
         'message': 'This user is not exist or deleted',
         'code': 375
     },
-    'CART_PRODUCT_ID_DOES_NOT_EXIST': {
-        'message': 'This user is not exist or deleted',
-        'code': 376
+    'PRODUCT_INFO_ID_DOES_NOT_EXIST': {
+        'message': 'This product is not exist or deleted',
+        'code': 377
     },
     'PRODUCT_ID_DOES_NOT_EXIST': {
         'message': 'This product is not exist or deleted',
-        'code': 377
+        'code': 378
     },
     'ENOUGH_PRODUCT_QUANTITY': {
         'message': 'Not enough product in store',
@@ -245,6 +250,10 @@ ErrorCode = {
     'CART_CANNOT_CHANGE': {
         'message': 'Your cart is confirmed, cannot change',
         'code': 381
+    },
+    'PRODUCT_INFO_REQUIRED': {
+        'message': 'you must provide product info',
+        'code': 382
     },
 
     'PARSE_JSON_FAIL': {

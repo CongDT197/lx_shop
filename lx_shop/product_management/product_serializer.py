@@ -27,7 +27,7 @@ class CreateProductSerializer(ModelSerializer):
     product_info = CreateProductInfoSerializer(many=True)
 
     def validate_price(self, value):
-        if value < 1:
+        if value == 0:
             raise ValidationError('PRICE_MIN_VALUE')
         return value
 
@@ -48,7 +48,6 @@ class CreateProductSerializer(ModelSerializer):
 
 
 class EditProductSerializer(ModelSerializer):
-    email = serializers.EmailField()
 
     class Meta:
         model = Product
