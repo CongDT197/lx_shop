@@ -116,7 +116,7 @@ class EditCartSerializer(ModelSerializer):
             old_cart_product.save()
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        instance.price=real_price
+        instance.price = real_price
         instance.save()
         return instance
 
