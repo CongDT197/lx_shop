@@ -10,8 +10,9 @@ from product_management.models import Product
 
 
 class ListCartSerializer(ModelSerializer):
-    cart_product_id = ListCartProductSerializer(many=True)
+    product_info = ListCartProductSerializer(many=True,required=False)
     pay_type = serializers.CharField(source='get_pay_type_display')
+    status = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = Cart
@@ -20,6 +21,13 @@ class ListCartSerializer(ModelSerializer):
 
 class CreateCartSerializer(ModelSerializer):
     product_info = CreateEditCartProductSerializer(many=True, required=False)
+
+    def validate_product_info(self, value):
+        for new_cart_product in value:
+            product_info = new_cart_product['product_info_id']
+            if product_info.is_active != True:
+                raise ValidationError('PRODUCT_INFO_ID_DOES_NOT_EXIST')
+        return value
 
     class Meta:
         model = Cart
@@ -60,9 +68,10 @@ class EditCartSerializer(ModelSerializer):
         for new_cart_product in value:
             product_info = new_cart_product['product_info_id']
             quantity = new_cart_product['quantity']
+            if product_info.is_active != True:
+                raise ValidationError('PRODUCT_INFO_ID_DOES_NOT_EXIST')
             if (product_info.quantity - quantity) < 0:
                 raise ValidationError('ENOUGH_PRODUCT_QUANTITY')
-
         return value
 
     class Meta:
@@ -126,17 +135,7 @@ class DetailCartSerializer(ModelSerializer):
         model = Cart
         fields = '__all__'
         extra_kwargs = {
-            'Cart_department': {'write_only': True},
             'is_active': {'read_only': True},
-            'first_name': {'write_only': True},
-            'date_joined': {'read_only': True},
-            'password': {'write_only': True},
-            'last_name': {'write_only': True},
-            'last_login': {'write_only': True},
-            'is_superCart': {'write_only': True},
-            'is_staff': {'write_only': True},
-            'groups': {'write_only': True},
-            'Cart_permissions': {'write_only': True},
         }
 
 

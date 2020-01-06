@@ -255,6 +255,10 @@ ErrorCode = {
         'message': 'you must provide product info',
         'code': 382
     },
+    'LOGIN_FAILED': {
+        'message': 'login failed because email or password was wrong',
+        'code': 382
+    },
 
     'PARSE_JSON_FAIL': {
         'message': 'Json ParseError,incorrect format',

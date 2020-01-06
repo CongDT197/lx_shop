@@ -101,17 +101,7 @@ class DetailProductSerializer(ModelSerializer):
         model = Product
         fields = '__all__'
         extra_kwargs = {
-            'Product_department': {'write_only': True},
             'is_active': {'read_only': True},
-            'first_name': {'write_only': True},
-            'date_joined': {'read_only': True},
-            'password': {'write_only': True},
-            'last_name': {'write_only': True},
-            'last_login': {'write_only': True},
-            'is_superProduct': {'write_only': True},
-            'is_staff': {'write_only': True},
-            'groups': {'write_only': True},
-            'Product_permissions': {'write_only': True},
         }
 
 

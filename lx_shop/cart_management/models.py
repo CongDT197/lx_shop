@@ -22,7 +22,6 @@ PAY_TYPE = (
 
 class Cart(models.Model):
     user_id = models.ForeignKey(User, related_name='cart_user', on_delete=CASCADE)
-    # cart_product_id = models.ManyToManyField(CartProduct, related_name='cart_cart_product')
     address_receive = models.CharField(max_length=100, null=False, validators=[MinLengthValidator(10)])
     pay_type = models.SmallIntegerField(choices=PAY_TYPE, null=False, default=PAYOFFLINE)
     price = MoneyField(decimal_places=2, default_currency='USD', max_digits=11)

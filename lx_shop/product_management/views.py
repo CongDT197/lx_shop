@@ -36,7 +36,7 @@ class ProductAPIView(GenericViewSet,
         serializer = self.get_serializer(queryset, many=True)
         return Response({
             'status': True,
-            'message': 'list Product',
+            'message': 'List Product',
             'data': serializer.data},
             status=HTTP_201_CREATED
         )
@@ -56,11 +56,11 @@ class ProductAPIView(GenericViewSet,
         id = self.kwargs[self.lookup_field]
         queryset = Product.objects.filter(id=id).filter(is_active=True)
         if queryset.count() == 0:
-            raise ValidationError('Product_IS_DELETED_BY_ANOTHER_ADMIN')
+            raise ValidationError('PRODUCT_IS_DELETED_BY_ANOTHER_ADMIN')
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         if not instance.is_active == True:
-            raise ValidationError('Product_IS_DELETED_BY_ANOTHER_ADMIN')
+            raise ValidationError('PRODUCT_IS_DELETED_BY_ANOTHER_ADMIN')
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -79,7 +79,7 @@ class ProductAPIView(GenericViewSet,
         # validate_set_id(set_id)
         queryset = Product.objects.filter(id__in=set_id).filter(is_active=True)
         if queryset.count() == 0:
-            raise ValidationError('Product_IS_DELETED_BY_ANOTHER_ADMIN')
+            raise ValidationError('PRODUCT_IS_DELETED_BY_ANOTHER_ADMIN')
         if queryset.update(is_active=False) > 0:
             return Response({'status': True,
                              'message': 'Product deleted!',
@@ -97,7 +97,7 @@ class ProductAPIView(GenericViewSet,
                              'message': "return success",
                              'data': serializer.data},
                             status=HTTP_200_OK)
-        raise ValidationError('Product_IS_DELETED_BY_ANOTHER_ADMIN')
+        raise ValidationError('PRODUCT_IS_DELETED_BY_ANOTHER_ADMIN')
 
     def get_serializer_class(self):
         try:

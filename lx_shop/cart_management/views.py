@@ -9,16 +9,17 @@ from rest_framework.viewsets import GenericViewSet
 
 from cart_management.cart_serializer import ListCartSerializer, DetailCartSerializer, CreateCartSerializer, \
     EditCartSerializer, DeleteCartSerializer
-from cart_management.models import Cart
+from cart_management.models import Cart, CartProduct
+from commons.constrain import CONFIRMED
 from commons.error_code import ValidationError
 
 
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(auto_schema=None))
 class CartAPIView(GenericViewSet,
-                     ListModelMixin,
-                     CreateModelMixin,
-                     UpdateModelMixin,
-                     RetrieveModelMixin):
+                  ListModelMixin,
+                  CreateModelMixin,
+                  UpdateModelMixin,
+                  RetrieveModelMixin):
     queryset = Cart.objects.filter(is_active=True)
     serializer_class = ListCartSerializer
     # authentication_classes = [ExpiringTokenAuthentication]
@@ -76,10 +77,20 @@ class CartAPIView(GenericViewSet,
     @transaction.atomic()
     def delete(self, request):
         set_id = request.data['set_id']
-        # validate_set_id(set_id)
         queryset = Cart.objects.filter(id__in=set_id).filter(is_active=True)
         if queryset.count() == 0:
-            raise ValidationError('Cart_IS_DELETED_BY_ANOTHER_ADMIN')
+            raise ValidationError('CART_IS_DELETED_BY_ANOTHER_ADMIN')
+        for cart in queryset:
+            if cart.status >= CONFIRMED:
+                raise ValidationError('CART_CANNOT_CHANGE')
+            list_cart_product = CartProduct.objects.filter(cart_id=cart)
+            for cart_product in list_cart_product:
+                product_info = cart_product.product_info_id
+                product_info.quantity += cart_product.quantity
+                product_info.save()
+                cart_product.is_active = False
+                cart_product.quantity = 0
+                cart_product.save()
         if queryset.update(is_active=False) > 0:
             return Response({'status': True,
                              'message': 'Cart deleted!',
@@ -97,7 +108,7 @@ class CartAPIView(GenericViewSet,
                              'message': "return success",
                              'data': serializer.data},
                             status=HTTP_200_OK)
-        raise ValidationError('Cart_IS_DELETED_BY_ANOTHER_ADMIN')
+        raise ValidationError('CART_IS_DELETED_BY_ANOTHER_ADMIN')
 
     def get_serializer_class(self):
         try:

@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   db:
-    container_name: mysql-lx-shop
+    container_name: mysql_lx_shop
     image: mysql:5.7
     environment:
       MYSQL_USER: user
@@ -14,7 +14,7 @@ services:
     ports:
       - "3306:3306"
   phpmyadmin:
-    container_name: phpmyadmin-local-lx-shop
+    container_name: phpmyadmin_local_lx-shop
     image: phpmyadmin/phpmyadmin
     depends_on:
       - db
