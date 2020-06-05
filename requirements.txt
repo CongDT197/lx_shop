@@ -1,5 +1,5 @@
 #django
-Django==3.0
+Django==3.0.7
 django-filter==2.0.0
 django-filters==0.1.0
 # Django REST Framework
